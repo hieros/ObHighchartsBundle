@@ -28,14 +28,16 @@ abstract class AbstractChart
     public $yAxis;
     public $exporting;
     public $navigation;
+    public $navigator;
+    
     public $pane;
     public $scrollbar;
 
     public function __construct()
     {
-        $chartOptions = array('chart', 'credits', 'global', 'labels', 'lang', 'legend', 'loading', 'plotOptions',
+        $chartOptions = array('chart', 'credits', 'global', 'lang', 'legend', 'loading', 'plotOptions',
             'rangeSelector', 'point', 'subtitle', 'title', 'tooltip', 'xAxis', 'yAxis', 'pane', 'exporting',
-            'navigation', 'drilldown', 'scrollbar');
+            'navigation', 'navigator', 'drilldown', 'scrollbar');
 
         foreach ($chartOptions as $option) {
             $this->initChartOption($option);
@@ -111,7 +113,6 @@ abstract class AbstractChart
         $result = "";
 
         if (!empty($chartOption)) {
-            // Zend\Json is used in place of json_encode to preserve JS anonymous functions
             $result .= $name . ": " . Json::encode($chartOption[0], false, array('enableJsonExprFinder' => true)) . ", \n";
         }
 
@@ -129,7 +130,6 @@ abstract class AbstractChart
         $result = "";
 
         if (get_object_vars($chartOption)) {
-            // Zend\Json is used in place of json_encode to preserve JS anonymous functions
             $result .= $name . ": " . Json::encode($chartOption, false, array('enableJsonExprFinder' => true)) . ",\n";
         }
 
@@ -201,6 +201,18 @@ abstract class AbstractChart
     /**
      * @return string
      */
+    protected function renderNavigator()
+    {
+        if (get_object_vars($this->navigator->navigator)) {
+            return "navigator: " . json_encode($this->navigator->navigator) . ",\n";
+        }
+
+        return "";
+    }
+    
+    /**
+     * @return string
+     */
     protected function renderXAxis()
     {
         if (gettype($this->xAxis) === 'array') {
@@ -225,7 +237,7 @@ abstract class AbstractChart
 
         return "";
     }
-
+    
     /**
      * @return string
      */
@@ -242,7 +254,7 @@ abstract class AbstractChart
 
         return $result;
     }
-
+    
     /**
      * @return string
      */
@@ -254,7 +266,7 @@ abstract class AbstractChart
 
         return "";
     }
-
+    
     /**
      * @return string
      */
